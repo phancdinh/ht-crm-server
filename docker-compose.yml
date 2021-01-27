@@ -1,0 +1,28 @@
+version: "3.1"
+services:
+  db-service:
+    image: mongo:4.2
+    container_name: 'mongo_db'
+    env_file: .env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongo
+      - MONGO_INITDB_ROOT_PASSWORD=mongo
+    volumes:
+      - c4c-fake-data:/data/db
+    ports:
+      - 27018:27017
+
+  rest-api:
+    build: .
+    container_name: 'c4c_fake_api'
+    env_file: .env
+    depends_on:
+      - db-service
+    environment:
+      - DB_HOST=db-service
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+
+volumes:
+  c4c-fake-data:
